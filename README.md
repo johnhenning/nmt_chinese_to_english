@@ -22,3 +22,4 @@
 for Chinese Word Segmentation](http://anoopsarkar.github.io/nlp-class/assets/project/sighan08.pdf)
 - [Two Easy Improvements to Lexical Weighting](http://anoopsarkar.github.io/nlp-class/assets/project/P11-2080.pdf)
 - [Brief and Useful rundown on the approach to Machine Translation](https://medium.com/@ageitgey/machine-learning-is-fun-part-5-language-translation-with-deep-learning-and-the-magic-of-sequences-2ace0acca0aa#.25sd8x6dr)
+- [Markov Chains - Turning a sentence into a probability](https://web.stanford.edu/class/cs124/lec/languagemodeling.pdf)
