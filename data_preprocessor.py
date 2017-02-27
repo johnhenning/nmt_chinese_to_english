@@ -1,6 +1,12 @@
 import numpy as np
 import nltk
 import h5py
+import os
+
+class Sentence:
+    def __init__(self, sentence, tag):
+        self.tag = tag
+        self.sentence = sentence
 
 class DatasetProcessor:
     def __init__(self):
@@ -9,17 +15,34 @@ class DatasetProcessor:
         self.EnglishDataset = []
         self.ChineseDataset = []
 
-    def CreateDataset(self, filename):
-        corpus_file = LoadCorpusFile(filename)
-        english_data, chinese_data = SeparateLanguages(corpus_file)
-        english_corpus = ProcessCorpus(english_data, 'English')
-        chinese_corpus = ProcessCorpus(chinese_data, 'Chinese')
+    def CreateDataset(self, filename, saveDictionary=True, saveDataset=True):
+        english_corpus_files, chinese_corpus_files = self.LoadCorpusFiles(filename)
 
-    def LoadCorpusFile(self, filename):
+        for f in english_corpus_files:
+            self.EnglishDataset.extend(ProcessCorpusFile(f)) #returns tokenized sentences
 
-    def SeparateLanguages(self, corpus_file):
+        for f in chinese_corpus_files:
+            self.ChineseDataset.extend(ProcessCorpusFile(f))
 
-    def ProcessCorpus(self, language_data, language):
+        if saveDictionary:
+            self.saveDictionaries()
+        if saveDataset:
+            self.saveDatasets()
+
+    def LoadCorpusFiles(self, filename):
+        english_corpus_files = []
+        chinese_corpus_files = []
+
+        return english_corpus_files, chinese_corpus_files
+
+    def CloseCorpusFiles(self, files):
+        for f in files:
+            f.close()
+
+    def ProcessCorpusFile(self):
+
+    def Tokenize(self):
+
 
     def FillDictionaryWithCorpus(self,language,corpus):
         d = {}
@@ -51,6 +74,9 @@ class DatasetProcessor:
                 d[word] = len(d.keys())
 
 
-    def TokenizeSentence(self,sentence):
+    def saveDictionary(self):
+
+    def saveDataset(self):
+
 
 
