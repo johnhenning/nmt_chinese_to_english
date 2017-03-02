@@ -2,6 +2,7 @@ import numpy as np
 import nltk
 import h5py
 import os
+import xml.etree.ElementTree as ET
 
 class Sentence:
     def __init__(self, sentence, tag):
@@ -39,7 +40,20 @@ class DatasetProcessor:
         for f in files:
             f.close()
 
-    def ProcessCorpusFile(self):
+    #this will need to change based on different xml structures, but for our data set, this splits and tokenizes the sentences
+    def ProcessCorpusFile(self, file):
+        data =[]
+        tree = ET.parse(file)
+        root = tree.getroot()
+
+        for child in root:
+            data.append("<s>")
+            for token in child:
+                if(token.tag == 'w'):
+                    data.append(token.text)
+            data.append("</s>")
+
+        return data
 
     def Tokenize(self):
 
