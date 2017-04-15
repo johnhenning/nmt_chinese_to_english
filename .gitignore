@@ -1,1 +1,6 @@
 .DS_Store
+*.xml
+*.gz
+.idea/
+en/
+zh_cn/
