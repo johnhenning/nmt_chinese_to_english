@@ -2,15 +2,20 @@
 #### Final Project for Machine Learning CAP6610 at UF
 
 ### Timeline
---
 - February 26th - Data Processor
 - March 12th - Model 
 - March 19th - Model Trainer (Start Training)
 - March 26th - Model Predictor 
 - April 8th - Project Due
 
-### Links
--- 
+### Features
+
+#### Train Word2Vec
+`python word2vec/w2v.py -train pickle/language_dataset -model word2vec/mode_filename`
+
+
+###Links
+ 
 - [A Primer on Neural Network Models for Natural Language Processing](https://arxiv.org/pdf/1510.00726.pdf)
 - [NLP Class Project](http://anoopsarkar.github.io/nlp-class/project.html)
 - [Tensorflow Sequence to Sequence Tutorial](https://www.tensorflow.org/tutorials/seq2seq/)

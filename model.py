@@ -53,12 +53,16 @@ class LSTM:
     def predict(self, x):
         h = np.zeros((self.hidden_nodes, 1))
         s = np.zeros((self.hidden_nodes, 1))
+        v = np.zeros((self.output_nodes, 1))
 
-        state = State(h, h, h, h, s, h)
+        state = State(h, h, h, h, s, h, v)
         states = [state]
 
         for _, token in enumerate(x):
-            assert token.shape == (self.input_nodes, 1)
+            try:
+                assert token.shape == (self.input_nodes, 1)
+            except AssertionError:
+                print token.shape
 
             g = np.tanh(np.dot(self.weights.wgx.T, token) + self.weights.wgh.T*h + self.weights.bg)
             i = self.sigmoid(np.dot(self.weights.wix.T, token) + self.weights.wih.T*h + self.weights.bi)
@@ -83,6 +87,6 @@ class LSTM:
         return e_x / e_x.sum()
 
     def save_weights(self, filename):
-        weights_file = open(filename)
+        weights_file = open(filename, 'wb')
         pickle.dump(self.weights, weights_file)
         weights_file.close()
