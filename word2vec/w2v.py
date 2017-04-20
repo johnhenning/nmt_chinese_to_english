@@ -82,7 +82,7 @@ class Vocab:
 
         count_unk = 0
         for token in self.vocab:
-            if token.count < 5:
+            if token.count < 2:
                 count_unk += 1
                 tmp[unk_hash].count += token.count
             else:
@@ -216,13 +216,7 @@ def init_net(vocab_size):
     return (syn0, syn1)
 
 
-def train_process(pid):
-    # Set fi to point to the right chunk of training file
-    start = vocab.bytes / num_processes * pid
-    end = vocab.bytes if pid == num_processes - 1 else vocab.bytes / num_processes * (pid + 1)
-    fi.seek(start)
-    # print 'Worker %d beginning training at %d, ending at %d' % (pid, start, end)
-
+def train_process(fi):
     alpha = starting_alpha
 
     word_count = 0
@@ -300,7 +294,7 @@ def save(vocab, syn0, fo):
 
 def __init_process(*args):
     global vocab, syn0, syn1, table, starting_alpha
-    global win, num_processes, global_word_count, fi
+    global win, global_word_count, fi
 
     vocab, syn0_tmp, syn1_tmp, table, starting_alpha, win, num_processes, global_word_count = args[:-1]
     fi = open('temp.pkl', "r")
@@ -310,8 +304,13 @@ def __init_process(*args):
         syn1 = np.ctypeslib.as_array(syn1_tmp)
 
 
-def train(fi, fo, alpha, win, num_processes):
+def train(fi, fo):
     # Read train file to init vocab
+    global vocab, syn0, syn1, table, starting_alpha
+    global global_word_count, win
+
+    starting_alpha = 0.025
+    win = 5
 
     vocab = Vocab()
 
@@ -326,7 +325,7 @@ def train(fi, fo, alpha, win, num_processes):
     ff = open('temp.pkl', 'wb')
     pickle.dump(all_data, ff)
     ff.close()
-    fi = open('temp.pkl', "r")
+    f = open('temp.pkl', "r")
     # Init net
     syn0, syn1 = init_net(len(vocab))
 
@@ -337,9 +336,8 @@ def train(fi, fo, alpha, win, num_processes):
 
     # Begin training using num_processes workers
     t0 = time.time()
-    pool = Pool(processes=num_processes, initializer=__init_process,
-                initargs=(vocab, syn0, syn1, table, alpha, win, num_processes, global_word_count, fi))
-    pool.map(train_process, range(num_processes))
+
+    train_process(f)
     t1 = time.time()
     print 'total time: ', t1 - t0
     print 'done'
@@ -357,6 +355,5 @@ if __name__ == '__main__':
     parser.add_argument('-processes', help='Number of processes', dest='num_processes', default=1, type=int)
     # TO DO: parser.add_argument('-epoch', help='Number of training epochs', dest='epoch', default=1, type=int)
     args = parser.parse_args()
-
     # trains model with 50 dimension word embeddings
-    train(args.fi, args.fo, args.alpha, args.win, args.num_processes)
+    train(args.fi, args.fo)
