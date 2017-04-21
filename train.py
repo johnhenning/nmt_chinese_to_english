@@ -139,8 +139,8 @@ def BTTDecoder(outputs, x, y, lstm):
     diff = Weights(lstm.input_nodes, lstm.hidden_nodes, lstm.output_nodes, 0)
     count = 0
     for output, yi, xi in zip(outputs, y, x):
-        de_dh = np.zeros_like(output[0].h.shape)
-        de_ds = np.zeros_like(de_dh)
+        de_dh = np.zeros((diff.hidden_nodes, diff.output_nodes), dtype='float64')
+        de_ds = np.zeros_like(de_dh, dtype='float64')
 
         for i in range(len(xi) - 1, -1, -1):
             print 'output shape', len(output), len(yi)
@@ -149,7 +149,7 @@ def BTTDecoder(outputs, x, y, lstm):
             dsoftmax_dh = dsoftmax_dx(output[i+1].h)
 
             print de_dsoftmax.shape, dsoftmax_dh.shape
-            de_dh += np.dot(dsoftmax_dh, de_dsoftmax.T)
+            de_dh += np.dot(dsoftmax_dh.astype('float64'), de_dsoftmax.T.astype('float64'))
 
             diff.whv += de_dh
             diff.bv += de_dsoftmax
