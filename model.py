@@ -50,12 +50,16 @@ class LSTM:
         self.output_nodes = output_nodes
         self.weights = Weights(input_nodes, hidden_nodes, output_nodes, 0.08)
 
-    def predict(self, x):
-        h = np.zeros((self.hidden_nodes, 1))
+    def predict(self, x, initial_h=None):
+        if initial_h is not None:
+            h = initial_h
+        else:
+            h = np.zeros((self.hidden_nodes, 1))
+
         s = np.zeros((self.hidden_nodes, 1))
         v = np.zeros((self.output_nodes, 1))
 
-        state = State(h, h, h, h, s, h, v)
+        state = State(s, s, s, s, s, h, v)
         states = [state]
 
         for _, token in enumerate(x):
@@ -90,3 +94,7 @@ class LSTM:
         weights_file = open(filename, 'wb')
         pickle.dump(self.weights, weights_file)
         weights_file.close()
+
+    def load_weights(self, filename):
+        f = open(filename)
+        self.weights = pickle.load(f)
