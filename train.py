@@ -149,7 +149,7 @@ def BTTDecoder(outputs, x, y, lstm):
             dsoftmax_dh = dsoftmax_dx(output[i+1].h)
 
             print de_dsoftmax.shape, dsoftmax_dh.shape
-            de_dh += np.multiply(de_dsoftmax, dsoftmax_dh)
+            de_dh += np.dot(dsoftmax_dh, de_dsoftmax.T)
 
             diff.whv += de_dh
             diff.bv += de_dsoftmax
