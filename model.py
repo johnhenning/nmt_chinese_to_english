@@ -51,8 +51,10 @@ class LSTM:
         self.weights = Weights(input_nodes, hidden_nodes, output_nodes, 0.08)
 
     def predict(self, x, initial_h=None):
+        b = False
         if initial_h is not None:
             h = initial_h
+            b = True
         else:
             h = np.zeros((self.hidden_nodes, 1))
 
@@ -62,7 +64,7 @@ class LSTM:
         state = State(s, s, s, s, s, h, v)
         states = [state]
 
-        for _, token in enumerate(x):
+        for j, token in enumerate(x):
             try:
                 assert token.shape == (self.input_nodes, 1)
             except AssertionError:
@@ -77,6 +79,9 @@ class LSTM:
             h = o*s
 
             v = self.softmax(np.dot(self.weights.whv.T, h) + self.weights.bv)
+
+            if b and j < 10:
+                x.append(v)
 
             state = State(i, g, f, o, s, h, v)
             states.append(state)
